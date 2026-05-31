@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Catch-All Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Main AD Document Handler
+    match /ads/{adId} {
+      allow read: if true;
+      allow create: if isValidId(adId) 
+                    && isValidAd(request.resource.data) 
+                    && request.resource.data.isPremium == false;
+      allow update, delete: if false;
+    }
+
+    // --- Core Helper Predicates & Validators ---
+    function isValidId(id) { 
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); 
+    }
+
+    function isValidAd(data) {
+      return data.keys().hasAll([
+        'id', 'title', 'description', 'type', 'equipmentState', 'regoState', 
+        'price', 'mileage', 'year', 'brand', 'model', 'location', 
+        'equipments', 'isPremium', 'image', 'sellerName', 'whatsappNumber', 'createdAt'
+      ]) 
+      && (data.keys().size() == 18 || (
+        data.keys().size() == 21 
+        && data.keys().hasAll(['vehicleCondition', 'latitude', 'longitude'])
+        && data.vehicleCondition in ['Excellent', 'Bon', 'À réviser', 'À réparer']
+        && (data.latitude is float || data.latitude is int)
+        && (data.longitude is float || data.longitude is int)
+      ))
+      && data.id is string && data.id.size() <= 128
+      && data.title is string && data.title.size() <= 150
+      && data.description is string && data.description.size() <= 2000
+      && data.type in ['Van', '4x4', 'Station Wagon']
+      && data.equipmentState in ['Clé en main', 'À aménager']
+      && data.regoState in ['WA', 'QLD', 'NSW', 'VIC', 'SA', 'NT', 'TAS']
+      && data.price is int && data.price >= 0 && data.price <= 1000000
+      && data.mileage is int && data.mileage >= 0 && data.mileage <= 2000000
+      && data.year is int && data.year >= 1950 && data.year <= 2027
+      && data.brand is string && data.brand.size() <= 50
+      && data.model is string && data.model.size() <= 50
+      && data.location is string && data.location.size() <= 100
+      && data.equipments is list && data.equipments.size() <= 30
+      && data.isPremium is bool
+      && data.image is string && data.image.size() <= 1000
+      && data.sellerName is string && data.sellerName.size() <= 80
+      && data.whatsappNumber is string && data.whatsappNumber.size() <= 30
+      && data.createdAt is string && data.createdAt.size() <= 50;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "Ad": {
+      "title": "Ad",
+      "description": "Un véhicule d'aventure posté par un backpacker en Australie",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Identifiant de l'annonce" },
+        "title": { "type": "string", "description": "Titre de l'annonce" },
+        "description": { "type": "string", "description": "Description détaillée du véhicule" },
+        "type": { "type": "string", "enum": ["Van", "4x4", "Station Wagon"], "description": "Type de véhicule" },
+        "equipmentState": { "type": "string", "enum": ["Clé en main", "À aménager"], "description": "État de l'équipement" },
+        "regoState": { "type": "string", "enum": ["WA", "QLD", "NSW", "VIC", "SA", "NT", "TAS"], "description": "État d'immatriculation (REGO)" },
+        "price": { "type": "integer", "description": "Prix en AUD" },
+        "mileage": { "type": "integer", "description": "Kilométrage en KM" },
+        "year": { "type": "integer", "description": "Année du véhicule" },
+        "brand": { "type": "string", "description": "Marque" },
+        "model": { "type": "string", "description": "Modèle" },
+        "location": { "type": "string", "description": "Ville ou région actuelle" },
+        "equipments": { "type": "array", "description": "Liste d'équipements inclus" },
+        "isPremium": { "type": "boolean", "description": "Annonce mise en avant" },
+        "image": { "type": "string", "description": "URL de l'image de couverture" },
+        "sellerName": { "type": "string", "description": "Nom du vendeur" },
+        "whatsappNumber": { "type": "string", "description": "Numéro de WhatsApp avec indicatif" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Date de création de l'annonce" },
+        "vehicleCondition": { "type": "string", "enum": ["Excellent", "Bon", "À réviser", "À réparer"], "description": "État du véhicule" },
+        "latitude": { "type": "number", "description": "Latitude géographique du véhicule" },
+        "longitude": { "type": "number", "description": "Longitude géographique du véhicule" }
+      },
+      "required": ["id", "title", "description", "type", "equipmentState", "regoState", "price", "mileage", "year", "brand", "model", "location", "sellerName", "whatsappNumber"]
+    }
+  },
+  "firestore": {
+    "/ads/{adId}": {
+      "schema": { "$ref": "Ad" },
+      "description": "Collection d'annonces de véhicules d'aventure"
+    }
+  }
+}

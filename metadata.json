@@ -1,0 +1,6 @@
+{
+  "name": "Le Bon Spot",
+  "description": "La première plateforme d'annonces de Vans et de 4x4 aménagés pour les backpackers en Australie.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
